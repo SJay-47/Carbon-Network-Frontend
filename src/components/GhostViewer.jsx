@@ -1,5 +1,3 @@
-import React from "react";
-
 import HappyGhost from "../assets/HappyGuy.png";
 import OkayGhost from "../assets/OkayGuy.png";
 import NotOkayGhost from "../assets/NotOkayGuy.png";

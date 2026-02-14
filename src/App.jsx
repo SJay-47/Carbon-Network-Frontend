@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ethers } from 'ethers';
+import { useState, useEffect, useCallback } from 'react';
 import GhostViewer from './components/GhostViewer';
 import './App.css';
 
