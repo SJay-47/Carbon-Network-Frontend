@@ -18,7 +18,8 @@ function App() {
         try {
             const response = await fetch(`${RELAY_URL}/ghost/${deviceAddress}`);
             const data = await response.json();
-            setGhostData(data);
+            console.log('Fetched ghost data:', data);
+            setGhostData({...data, lastUpdate: Date.now() });
         } catch (error) {
             console.error('Error fetching ghost data:', error);
         }
@@ -36,7 +37,6 @@ function App() {
     }, [RELAY_URL]);
 
     useEffect(() => {
-        // Poll for updates every 5 seconds
         
         const interval = setInterval(() => {
             if (deviceAddress) {
@@ -55,14 +55,13 @@ function App() {
         fetchGridStatus();
     };
 
-    // Helper functions for seasonal display
     const getSeasonEmoji = (season) => {
         const emojis = {
-            'Spring': '🌸',
-            'Summer': '☀️',
-            'Fall': '🍂',
-            'Winter': '❄️',
-            'Dead': '☠️'
+            'spring': '    🌸',
+            'summer': '    ☀️',
+            'fall': '    🍂',
+            'winter': '    ❄️',
+            'dead': '    ☠️'
         };
         return emojis[season] || '☀️';
     };
@@ -109,14 +108,14 @@ function App() {
                 </div>
 
                 <div className="stats-panel">
-                    <h2>Ghost Stats</h2>
-                    {loading && <p>Loading...</p>}
+                    <h2>Ghost Stats {loading && <span>    Loading...</span>}</h2>
+                    
                     {ghostData && (
                         <div className="stats">
                             <div className="stat-item">
                                 <span className="label">Season:</span>
-                                <span className={`value season-${ghostData.season?.toLowerCase() || 'summer'}`}>
-                                    {getSeasonEmoji(ghostData.season)} {ghostData.season || 'Summer'}
+                                <span className={`value season-${getHealthClass(ghostData.health).toLowerCase() || 'summer'}`}>
+                                    {getSeasonEmoji(getHealthClass(ghostData.health))} {getHealthLabel(ghostData.health) || 'Summer'}
                                 </span>
                             </div>
                             <div className="stat-item">
@@ -128,17 +127,12 @@ function App() {
                                         style={{ width: `${ghostData.health}%` }}
                                     />
                                 </div>
-                                <span className="health-label">{getHealthLabel(ghostData.health)}</span>
+                            
                             </div>
-                            <div className="stat-item">
-                                <span className="label">Mood:</span>
-                                <span className={`value ${ghostData.mood?.toLowerCase() || 'neutral'}`}>
-                                    {ghostData.mood || 'Neutral'}
-                                </span>
-                            </div>
+                          
                             <div className="stat-item">
                                 <span className="label">Deposit:</span>
-                                <span className="value">{ghostData.deposit} MATIC</span>
+                                <span className="value">{ghostData.deposit} POL</span>
                             </div>
                             <div className="stat-item">
                                 <span className="label">Green Credits:</span>
@@ -151,7 +145,7 @@ function App() {
                             <div className="stat-item">
                                 <span className="label">Last Update:</span>
                                 <span className="value small">
-                                    {new Date(ghostData.lastUpdate).toLocaleString()}
+                                    {'    '+ new Date(ghostData.lastUpdate).toLocaleString()}
                                 </span>
                             </div>
                         </div>
